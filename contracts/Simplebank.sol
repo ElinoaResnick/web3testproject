@@ -3,12 +3,15 @@ pragma solidity >=0.4.22 <0.9.0;
 
 contract Simplebank {
     uint public numberofFunders;
+    uint public minAmountFotBid;
     address public owner;
+    address public lastFunder;
     mapping(address=> bool) private funders;
     mapping(uint => address) private lutFunders;
 
     constructor(){
         owner = msg.sender;
+        minAmountFotBid = 4;
     }
 
     modifier onlyOwner(){
@@ -23,10 +26,12 @@ contract Simplebank {
 
     function addFunds() external payable{
         address funder = msg.sender;
+        lastFunder = funder; // update last funder
         if(!funders[funder]){
             uint index = numberofFunders++;
             funders[funder] = true;
             lutFunders[index] = funder;
+            
         }
 
     }
@@ -42,7 +47,15 @@ contract Simplebank {
         payable (msg.sender).transfer(withdrawAmount);
     }
 
+    function getLastFunder() external view returns (address) {
+        return lastFunder;
+    }
+
+
+    
 }
+
+
 //const instance = await Simplebank.deployed()
 //const funds = instance.funds()
 //instance.addFunds({value:"500000000000000000", from: accounts[0]})

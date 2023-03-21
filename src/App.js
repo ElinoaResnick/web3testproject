@@ -5,6 +5,8 @@ import { useEffect } from 'react';
 import detectEthereumProvider from '@metamask/detect-provider';
 import { loadContract } from './utils/load-contract';
 import Web3 from 'web3';
+
+
 function App() {
   const [web3Api, setWeb3Api] = useState({
   provider:null,
@@ -16,6 +18,10 @@ function App() {
   const [account, setAccount] = useState(null)
   const [deposit, setDeposit] = useState('')
   const [withdrawAmount, setWithdrawAmount] = useState('')
+  const [productID, setProductID] = useState('')
+  const [msgForBuyer, setMsgForBuyer] = useState(null)
+  const [lastFunder, setLastFunder] = useState(null)
+
 
 function handelDeposit(e){
   setDeposit(e.target.value)
@@ -23,6 +29,9 @@ function handelDeposit(e){
 
 function handelWithdrawAmount(e){
   setWithdrawAmount(e.target.value)
+}
+function handelProductID(e){
+  setProductID(e.target.value)
 }
 
 useEffect(()=>{
@@ -46,6 +55,19 @@ useEffect(()=>{
 
 loadProvider()
   },[])
+
+  useEffect(() => {
+    const loadLastFunder = async () => {
+      const { contract } = web3Api;
+      const lastFunder = await contract.getLastFunder();
+      setLastFunder(lastFunder);
+      console.log(lastFunder)
+    };
+    web3Api.contract && loadLastFunder();
+  }, [web3Api]);
+  
+  
+
 const addFunds = async () => {
   const {contract,web3} = web3Api
   await contract.addFunds({
@@ -59,6 +81,25 @@ const withDraw = async () => {
   const withDrawAmount = web3.utils.toWei(withdrawAmount,"ether")
   await contract.withdraw(withDrawAmount, {from:account})
 }
+
+const submitBed = async () => {
+  // console.log(deposit)
+  // console.log(balance)
+  if(Number(deposit) > Number(balance)){
+    const {contract,web3} = web3Api
+    await contract.addFunds({
+      from:account,
+      value:web3.utils.toWei(deposit,"ether")
+    })
+    setMsgForBuyer("Congratulations! you are thr highest bidder")
+  }
+  else{
+    console.log("not good")
+    setMsgForBuyer("Your bid is lower than the last bid, try spendingsome more money")
+  }
+
+}
+
 
 useEffect(() => {
   const loadBalance = async () => {
@@ -80,7 +121,10 @@ useEffect(() => {
 return (
   <div className="App">
   <div> Current Balance is {balance} Ether </div>
-  <div> Check that your account is {account} </div>
+  <div> Check that your account is {account} </div><br></br>
+  <div> Current biding price is {balance} </div>
+  <div>last date for biding is {}</div>
+  <br></br>
   <div>
     <input onChange={handelDeposit} />
     <button onClick={addFunds}> Add funds </button>
@@ -89,6 +133,13 @@ return (
     <input onChange={handelWithdrawAmount} />
     <button onClick={withDraw}> Withdraw funds </button>
   </div>
+  <div>
+    <input onChange={handelDeposit} />
+    <button onClick={submitBed}> submitBed </button>
+  </div>
+  <div>{msgForBuyer} </div>
+  <div>the last funder is {lastFunder} </div>
+
   </div>
 );
 }
