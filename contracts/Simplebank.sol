@@ -10,7 +10,9 @@ contract Simplebank {
     address public productOwner;
     address public lastFunder;
     mapping(address=> bool) private funders;
-    mapping(uint => address) private lutFunders;
+    mapping(address => Product[]) private ownerProducts; 
+    mapping(uint => address) private lutFunders; 
+    mapping(address => uint) private ownerProductCounter;
     struct Product {
     uint id;
     string name;
@@ -19,6 +21,8 @@ contract Simplebank {
     }
     mapping (address => Product) public products;
     uint private productCounter = 0;
+    mapping(address => Product) private latestProducts;
+
 
 
 
@@ -112,59 +116,36 @@ function addFunds() external payable {
     recipient.transfer(amount);
     }
 
-    // function addNewProduct(string memory _name, uint _startingPriceWei, string memory _generalDescription, address _owner) public {
-    // Product memory newProduct = Product(_name, _startingPriceWei, _generalDescription);
-    // products[_owner] = newProduct;
-    // }
 
     function addNewProduct(string memory _name, uint _startingPriceWei, string memory _generalDescription, address _owner) public {
     Product memory newProduct = Product(productCounter, _name, _startingPriceWei, _generalDescription);
-    products[_owner] = newProduct;
+    ownerProducts[_owner].push(newProduct);
+    latestProducts[_owner] = newProduct;
+    ownerProductCounter[_owner]++;
     lutFunders[productCounter] = _owner;
     productCounter++;
-    }
+}
 
-    // function getAllProducts() external view returns (Product[] memory) {
-    //     uint productCount = 0;
-    //     for (uint i = 0; i < numberofFunders; i++) {
-    //         address productOwnerr = lutFunders[i];
-    //         if (bytes(products[productOwnerr].name).length != 0) {
-    //             productCount++;
-    //         }
-    //     }
-    //     Product[] memory allProducts = new Product[](productCount);
-    //     uint productIndex = 0;
-    //     for (uint i = 0; i < numberofFunders; i++) {
-    //     address productOwner = lutFunders[i];
-    //     if (bytes(products[productOwner].name).length != 0) {
-    //     allProducts[productIndex] = products[productOwner];
-    //     productIndex++;
-    // }
-    // }
-
-    //     return allProducts;
-    //     }
-
-    
-    function getAllProducts() external view returns (Product[] memory) {
+function getAllProducts() external view returns (Product[] memory) {
     uint productCount = 0;
-    for (uint i = 0; i < productCounter; i++) {
-        address productOwnerr = lutFunders[i];
-        if (bytes(products[productOwnerr].name).length != 0) {
+    for (uint i = 0; i < numberofFunders; i++) {
+        address productOwner = lutFunders[i];
+        if (ownerProductCounter[productOwner] > 0) {
             productCount++;
         }
     }
     Product[] memory allProducts = new Product[](productCount);
     uint productIndex = 0;
-    for (uint i = 0; i < productCounter; i++) {
+    for (uint i = 0; i < numberofFunders; i++) {
         address productOwner = lutFunders[i];
-        if (bytes(products[productOwner].name).length != 0) {
-            allProducts[productIndex] = products[productOwner];
+        if (ownerProductCounter[productOwner] > 0) {
+            allProducts[productIndex] = latestProducts[productOwner];
             productIndex++;
         }
     }
     return allProducts;
-    }
+}
+
 
     
     function getBalance() public view returns (uint256) {
