@@ -113,11 +113,10 @@ function addFunds() external payable {
     recipient.transfer(amount);
     }
 
-    function addNewProduct(address _owner, string memory _name, uint _startingPriceWei, string memory _generalDescription) public {
+    function addNewProduct(string memory _name, uint _startingPriceWei, string memory _generalDescription, address _owner) public {
     Product memory newProduct = Product(_name, _startingPriceWei, _generalDescription);
     products[_owner] = newProduct;
     }
-
 
 
     function getAllProducts() external view returns (Product[] memory) {
@@ -166,5 +165,4 @@ function addFunds() external payable {
 // const recipient = "0x687591815BF3EeacF01FdE0aE993314259D607d9"; // replace with recipient address
 // const amount = web3.utils.toWei("12", "ether"); // replace with amount to withdraw in ether
 // await instance.withdrawTo(recipient, amount, { from: accounts[0] }); // replace with sender account
-
 
