@@ -81,9 +81,6 @@ function addFunds() external payable {
 }
 
 
-
-  
-
     function getAllFunders() external view returns(address[] memory) {
         address[] memory _funders = new address[](numberofFunders);
         for(uint i=0; i<numberofFunders; i++){

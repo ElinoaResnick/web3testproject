@@ -188,7 +188,7 @@ useEffect(() => {
 
   const addProduct = async () => {
     const { contract, web3 } = web3Api;
-    const startingPriceWei = web3.utils.toWei(startingPrice, 'ether');
+    const startingPriceWei = startingPrice;
     await contract.addNewProduct(productName, startingPriceWei, generalDescription, account, {
       from: account,
     });
