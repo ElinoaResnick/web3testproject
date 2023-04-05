@@ -1,6 +1,5 @@
 
 import './App.css';
-import Person from './person';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import detectEthereumProvider from '@metamask/detect-provider';
@@ -193,6 +192,8 @@ useEffect(() => {
       from: account,
     });
   };
+
+
   
   useEffect(() => {
     const getProducts = async () => {

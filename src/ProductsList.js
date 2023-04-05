@@ -26,6 +26,7 @@ function ProductList({ products }) {
     <table>
       <thead>
         <tr>
+          <th>ID</th>
           <th>Name</th>
           <th>Starting Price (Wei)</th>
           <th>Description</th>
@@ -34,6 +35,7 @@ function ProductList({ products }) {
       <tbody>
         {products.map((product) => (
           <tr key={product.id}>
+            <td>{product.id}</td>
             <td>{product.name}</td>
             <td>{product.startingPriceWei}</td>
             <td>{product.generalDescription}</td>
