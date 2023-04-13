@@ -142,8 +142,19 @@ function payForUpload() external payable {
     }
 
 
+    // function addNewProduct(string memory _name, uint _startingPriceWei, string memory _generalDescription, address _owner) public {
+    // // require(products[msg.sender].id == 0, "Funder cannot add a new product if they already have one");
+    // require(!hasAddedProduct[_owner], "Funder can only add a product once");
+    // Product memory newProduct = Product(productCounter, _name, _startingPriceWei, _generalDescription, _owner);
+    // ownerProducts[_owner].push(newProduct);
+    // latestProducts[_owner] = newProduct;
+    // ownerProductCounter[_owner]++;
+    // lutFunders[productCounter] = _owner;
+    // productCounter++;
+    // hasAddedProduct[_owner] = true;
+    // }
+
     function addNewProduct(string memory _name, uint _startingPriceWei, string memory _generalDescription, address _owner) public {
-    // require(products[msg.sender].id == 0, "Funder cannot add a new product if they already have one");
     require(!hasAddedProduct[_owner], "Funder can only add a product once");
     Product memory newProduct = Product(productCounter, _name, _startingPriceWei, _generalDescription, _owner);
     ownerProducts[_owner].push(newProduct);
@@ -152,6 +163,19 @@ function payForUpload() external payable {
     lutFunders[productCounter] = _owner;
     productCounter++;
     hasAddedProduct[_owner] = true;
+
+    // Update productOwner and minAmountForBid
+    if (productCounter == 1) {
+        // If this is the first product added, set productOwner and minAmountForBid to this product's details
+        productOwner = _owner;
+        minAmountForBid = _startingPriceWei;
+        } else {
+        // Check if this product's ID is lower than the previous lowest ID
+            if (newProduct.id < ownerProducts[productOwner][0].id) {
+            productOwner = _owner;
+            minAmountForBid = _startingPriceWei;
+                }
+            }
     }
 
 
