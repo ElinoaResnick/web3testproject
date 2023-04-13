@@ -25,6 +25,8 @@ contract Simplebank {
     uint private productCounter = 0;
     mapping(address => Product) private latestProducts;
 
+    mapping(address => bool) private hasAddedProduct;
+
 
 
 
@@ -138,12 +140,14 @@ function payForUpload() external payable {
 
     function addNewProduct(string memory _name, uint _startingPriceWei, string memory _generalDescription, address _owner) public {
     // require(products[msg.sender].id == 0, "Funder cannot add a new product if they already have one");
+    require(!hasAddedProduct[_owner], "Funder can only add a product once");
     Product memory newProduct = Product(productCounter, _name, _startingPriceWei, _generalDescription, _owner);
     ownerProducts[_owner].push(newProduct);
     latestProducts[_owner] = newProduct;
     ownerProductCounter[_owner]++;
     lutFunders[productCounter] = _owner;
     productCounter++;
+    hasAddedProduct[_owner] = true;
 }
 
 
