@@ -5,6 +5,7 @@ contract Simplebank {
     uint public numberofFunders;
     uint public numberofFunds;
     uint public minAmountForBid;
+    uint public payForUploadProduct;
     uint public lastBid;
     address public owner;
     address public productOwner;
@@ -18,6 +19,7 @@ contract Simplebank {
     string name;
     uint startingPriceWei;
     string generalDescription;
+    address funder;
     }
     mapping (address => Product) public products;
     uint private productCounter = 0;
@@ -30,6 +32,7 @@ contract Simplebank {
         owner = msg.sender;
         minAmountForBid = 4000000000000000000;
         productOwner = 0x23B2721CCB602b1080CE57c6b724119dc9ccB278;
+        payForUploadProduct = 1000000000000000000;
     }
 
     modifier onlyOwner(){
@@ -86,6 +89,22 @@ function addFunds() external payable {
 
 }
 
+function payForUpload() external payable {
+    address funder = msg.sender;
+    uint newFund = msg.value;
+    require(newFund == payForUploadProduct, "pay is 1 ether");
+    lastFunder = funder; // update last funder
+    if (!funders[funder]) {
+        uint index = numberofFunders++;
+        funders[funder] = true;
+        lutFunders[index] = funder;
+    }
+    
+    address payable contractOwner = payable(owner);
+    contractOwner.transfer(msg.value);
+    }
+
+
 
     function getAllFunders() external view returns(address[] memory) {
         address[] memory _funders = new address[](numberofFunders);
@@ -118,7 +137,8 @@ function addFunds() external payable {
 
 
     function addNewProduct(string memory _name, uint _startingPriceWei, string memory _generalDescription, address _owner) public {
-    Product memory newProduct = Product(productCounter, _name, _startingPriceWei, _generalDescription);
+    // require(products[msg.sender].id == 0, "Funder cannot add a new product if they already have one");
+    Product memory newProduct = Product(productCounter, _name, _startingPriceWei, _generalDescription, msg.sender);
     ownerProducts[_owner].push(newProduct);
     latestProducts[_owner] = newProduct;
     ownerProductCounter[_owner]++;
@@ -126,25 +146,26 @@ function addFunds() external payable {
     productCounter++;
 }
 
-function getAllProducts() external view returns (Product[] memory) {
-    uint productCount = 0;
-    for (uint i = 0; i < numberofFunders; i++) {
-        address productOwner = lutFunders[i];
-        if (ownerProductCounter[productOwner] > 0) {
-            productCount++;
+
+    function getAllProducts() external view returns (Product[] memory) {
+        uint productCount = 0;
+        for (uint i = 0; i < numberofFunders; i++) {
+            address productOwner = lutFunders[i];
+            if (ownerProductCounter[productOwner] > 0) {
+                productCount++;
+            }
         }
-    }
-    Product[] memory allProducts = new Product[](productCount);
-    uint productIndex = 0;
-    for (uint i = 0; i < numberofFunders; i++) {
-        address productOwner = lutFunders[i];
-        if (ownerProductCounter[productOwner] > 0) {
-            allProducts[productIndex] = latestProducts[productOwner];
-            productIndex++;
+        Product[] memory allProducts = new Product[](productCount);
+        uint productIndex = 0;
+        for (uint i = 0; i < numberofFunders; i++) {
+            address productOwner = lutFunders[i];
+            if (ownerProductCounter[productOwner] > 0) {
+                allProducts[productIndex] = latestProducts[productOwner];
+                productIndex++;
+            }
         }
+        return allProducts;
     }
-    return allProducts;
-}
 
 
     
@@ -152,6 +173,12 @@ function getAllProducts() external view returns (Product[] memory) {
         return address(this).balance;
     }
 
+
+    function payContractOwner() public payable {
+    require(msg.value == 1 ether, "Insufficient funds");
+    address payable contractOwner = payable(owner);
+    contractOwner.transfer(1 ether);
+}
 
     
 }
