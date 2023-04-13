@@ -24,10 +24,13 @@ function App() {
   const [startingPrice, setStartingPrice] = useState('')
   const [generalDescription, setGeneralDescription] = useState('')
   const [msgForBuyer, setMsgForBuyer] = useState(null)
+  const [msgForFee, setMsgForFee] = useState(null)
   const [lastFunder, setLastFunder] = useState(null)
   const [minAmount, setMinAmount] = useState(null)
   const [numberofFunds, setNumberofFunds] = useState(null)
   const [products, setProducts] = useState([]);
+
+  
 
 
 
@@ -52,6 +55,14 @@ function handleStartingPrice(e){
 function handleGeneralDescription(e){
   setGeneralDescription(e.target.value)
 }
+
+function handleSelectButton (product) {
+  setProductID(product.id);
+  // setProductName(product.name);
+  // setStartingPrice(product.startingPrice);
+  // setGeneralDescription(product.generalDescription);
+}
+
 
 useEffect(()=>{
   const loadProvider = async () => {
@@ -185,6 +196,8 @@ useEffect(() => {
     await addProduct();
   };
 
+
+
   const addProduct = async () => {
     const { contract, web3 } = web3Api;
     const startingPriceWei = startingPrice;
@@ -193,7 +206,15 @@ useEffect(() => {
     });
   };
 
-
+  const payFee = async () => {
+    const {contract,web3} = web3Api
+    await contract.payForUpload({
+      from:account,
+      value:web3.utils.toWei("1","ether")
+    })
+    setMsgForFee("The Fee has been payed")
+    document.getElementById("myBtn").disabled = true;
+  };
   
   useEffect(() => {
     const getProducts = async () => {
@@ -213,15 +234,14 @@ useEffect(() => {
       <br></br>
       <div> Your account balance is {accountBalance} </div>
       <br></br>
-      <div>The current product offered for sale is a Tesla car and its starting price is {minAmount} ethr</div>
+
+      <br></br>
+      <div>the id you r bidding for is {productID}</div>
+      <div>its starting price is {minAmount} ethr</div>
       <br></br>
       <div> Current biding price is {balance} </div>
       <div>The currend bid is {numberofFunds}/3</div>
       <br></br>
-      {/* <div>
-        <input onChange={handelDeposit} />
-        <button onClick={addFundsPlain}> Add funds </button>
-      </div> */}
       <div>
         <input onChange={handelDeposit} />
         <button onClick={submitBed}> submitBed </button>
@@ -230,7 +250,6 @@ useEffect(() => {
       <div>{msgForBuyer} </div>
       <div>the last funder is {lastFunder} </div>
       <br></br>
-      {/* <div>The minimum amount to bid is {minAmount}</div> */}
       <br></br>
       <br></br>
       <div>
@@ -239,14 +258,21 @@ useEffect(() => {
       </div>
       <br></br>
       <div> To upload a new product for auction fill in this fields: 
-        <br></br>
+        <br></br><br></br>
+        
         Product name <input type="text" value={productName} onChange={handleProductName} /><br></br>
         Starting price <input type="text" value={startingPrice} onChange={handleStartingPrice} /><br></br>
         General description <textarea value={generalDescription} onChange={handleGeneralDescription}></textarea><br></br>
         <button onClick={submitProduct}> submitProduct </button>
       </div>
-      <ProductsList products={products} /> 
-      {/* <Person /> */}
+      <br></br><br></br>
+      <div>NOTICE!!</div>
+      <div>If you have not yet participated in an auction - you will have to pay a fee of 1 EHTER in order to put a product up for sale </div>
+      <button id ="myBtn" onClick={payFee}> Press here to pay fee </button>
+      <br></br>
+      <div >{msgForFee} </div>
+      <br></br><br></br>
+      <ProductsList products={products} onSelectProduct={handleSelectButton} /> 
     </div>
   );
   }
