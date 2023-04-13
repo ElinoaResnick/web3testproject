@@ -123,6 +123,10 @@ function payForUpload() external payable {
     function getLastFunder() external view returns (address) {
         return lastFunder;
     }
+    
+    function getProductOwner() external view returns (address) {
+        return productOwner;
+    }
 
     function getMinAmount() external view returns (uint) {
         return minAmountForBid;
@@ -148,7 +152,7 @@ function payForUpload() external payable {
     lutFunders[productCounter] = _owner;
     productCounter++;
     hasAddedProduct[_owner] = true;
-}
+    }
 
 
 

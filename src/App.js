@@ -26,6 +26,7 @@ function App() {
   const [msgForBuyer, setMsgForBuyer] = useState(null)
   const [msgForFee, setMsgForFee] = useState(null)
   const [lastFunder, setLastFunder] = useState(null)
+  const [productOwner, setProductOwner] = useState(null)
   const [minAmount, setMinAmount] = useState(null)
   const [numberofFunds, setNumberofFunds] = useState(null)
   const [products, setProducts] = useState([]);
@@ -95,6 +96,16 @@ loadProvider()
     };
     web3Api.contract && loadLastFunder();
   }, [web3Api]);
+ 
+  useEffect(() => {
+    const loadProductOwner = async () => {
+      const { contract } = web3Api;
+      const ProductOwner = await contract.getProductOwner();
+      setProductOwner(ProductOwner);
+      console.log(productOwner)
+    };
+    web3Api.contract && loadProductOwner();
+  }, [web3Api]);
   
   useEffect(() => {
     const loadNumberofFunds = async () => {
@@ -127,6 +138,7 @@ const withDraw = async () => {
   const {contract,web3} = web3Api
   const withDrawAmount = web3.utils.toWei(withdrawAmount,"ether")
   await contract.withdraw(withDrawAmount, {from:account})
+  console.log("rr")
 }
 
 const submitBed = async () => {
@@ -191,20 +203,39 @@ useEffect(() => {
   },[web3Api.web3])
 
 
+  async function submitProduct() {
+    try {
+      await web3Api.contract.addNewProduct(
+        productName,
+        web3Api.web3.utils.toWei(startingPrice, 'ether'),
+        generalDescription,
+        account
+      );
+    } catch (err) {
+      setMsgForBuyer("you already added a product for sale");
+      return;
+    }
   
-  const submitProduct = async () => {
-    await addProduct();
-  };
+    // If the product was added successfully, clear the input fields and show a success message
+    setProductName('');
+    setStartingPrice('');
+    setGeneralDescription('');
+    setMsgForBuyer('Product added successfully!');
+  }
+  
+  // const submitProduct = async () => {
+  //   await addProduct();
+  // };
 
 
 
-  const addProduct = async () => {
-    const { contract, web3 } = web3Api;
-    const startingPriceWei = startingPrice;
-    await contract.addNewProduct(productName, startingPriceWei, generalDescription, account, {
-      from: account,
-    });
-  };
+  // const addProduct = async () => {
+  //   const { contract, web3 } = web3Api;
+  //   const startingPriceWei = startingPrice;
+  //   await contract.addNewProduct(productName, startingPriceWei, generalDescription, account, {
+  //     from: account,
+  //   });
+  // };
 
   const payFee = async () => {
     const {contract,web3} = web3Api
@@ -227,6 +258,9 @@ useEffect(() => {
 
 
 
+  
+
+
   return (
     <div className="App">
       <div> Current Balance is {balance} Ether </div>
@@ -237,6 +271,7 @@ useEffect(() => {
 
       <br></br>
       <div>the id you r bidding for is {productID}</div>
+      <div>the product owner  is {productOwner}</div>
       <div>its starting price is {minAmount} ethr</div>
       <br></br>
       <div> Current biding price is {balance} </div>
@@ -265,6 +300,7 @@ useEffect(() => {
         General description <textarea value={generalDescription} onChange={handleGeneralDescription}></textarea><br></br>
         <button onClick={submitProduct}> submitProduct </button>
       </div>
+      {/* {msgForBuyer && <p>{msgForBuyer}</p>} */}
       <br></br><br></br>
       <div>NOTICE!!</div>
       <div>If you have not yet participated in an auction - you will have to pay a fee of 1 EHTER in order to put a product up for sale </div>
