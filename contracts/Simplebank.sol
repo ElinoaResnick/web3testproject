@@ -138,13 +138,14 @@ function payForUpload() external payable {
 
     function addNewProduct(string memory _name, uint _startingPriceWei, string memory _generalDescription, address _owner) public {
     // require(products[msg.sender].id == 0, "Funder cannot add a new product if they already have one");
-    Product memory newProduct = Product(productCounter, _name, _startingPriceWei, _generalDescription, msg.sender);
+    Product memory newProduct = Product(productCounter, _name, _startingPriceWei, _generalDescription, _owner);
     ownerProducts[_owner].push(newProduct);
     latestProducts[_owner] = newProduct;
     ownerProductCounter[_owner]++;
     lutFunders[productCounter] = _owner;
     productCounter++;
 }
+
 
 
     function getAllProducts() external view returns (Product[] memory) {
