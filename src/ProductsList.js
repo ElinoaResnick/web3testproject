@@ -36,6 +36,7 @@ function ProductList({ products, onSelectProduct }) {
             <th>Description</th>
             {/* <th>Select</th> */}
             <th>Product owner</th>
+            <th>Is Sold</th>
           </tr>
         </thead>
         <tbody>
@@ -62,6 +63,7 @@ function ProductList({ products, onSelectProduct }) {
                 <td>{product.startingPriceWei}</td>
                 <td>{product.generalDescription}</td>
                 <td>{product.funder}</td>
+                <td>{product.isSold}</td>
                 {/* <td>
                   <button onClick={() => handleSelectButton(product)}>Select</button>
                 </td> */}

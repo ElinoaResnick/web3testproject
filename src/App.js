@@ -28,6 +28,7 @@ function App() {
   const [lastFunder, setLastFunder] = useState(null)
   const [productOwner, setProductOwner] = useState(null)
   const [minAmount, setMinAmount] = useState(null)
+  const [lowestProductID, setLowestProductID] = useState(null)
   const [numberofFunds, setNumberofFunds] = useState(null)
   const [products, setProducts] = useState([]);
 
@@ -97,15 +98,7 @@ loadProvider()
     web3Api.contract && loadLastFunder();
   }, [web3Api]);
  
-  useEffect(() => {
-    const loadProductOwner = async () => {
-      const { contract } = web3Api;
-      const ProductOwner = await contract.getProductOwner();
-      setProductOwner(ProductOwner);
-      console.log(productOwner)
-    };
-    web3Api.contract && loadProductOwner();
-  }, [web3Api]);
+
   
   useEffect(() => {
     const loadNumberofFunds = async () => {
@@ -173,6 +166,9 @@ useEffect(() => {
   web3Api.contract && loadMinAmount();
 }, [web3Api]);
 
+
+
+
 useEffect(() => {
   const loadBalance = async () => {
     const {contract,web3} = web3Api
@@ -192,24 +188,56 @@ useEffect(() => {
   }, [web3Api, account]);
   
 
+  // useEffect(() => {
+  //   const loadLowestProductID = async () => {
+  //     const { contract} = web3Api;
+  //     const lowestProductID = await contract.getLowestProductIDForSale();
+  //     setLowestProductID(lowestProductID);
+  //     console.log(loadLowestProductID)
+  //   };
+  //   web3Api.contract && loadLowestProductID();
+  // }, [web3Api]);
 
+  useEffect(() => {
+    const loadLowestProductID = async () => {
+      const { contract } = web3Api;
+      const lowestProductID = await contract.getLowestProductIDForSale();
+      const lowestProductIDInt = lowestProductID.toNumber(); // convert BN to integer
+      setLowestProductID(lowestProductIDInt);
+    };
+    web3Api.contract && loadLowestProductID();
+  }, [web3Api]);
+  
 
-useEffect(() => {
-  const getAccount = async () => {
-    const accounts = await web3Api.web3.eth.getAccounts()
-    setAccount(accounts[0])
-  }
-  web3Api.web3 && getAccount()
-  },[web3Api.web3])
+  useEffect(() => {
+    const loadProductOwner = async () => {
+      const { contract } = web3Api;
+      const ProductOwner = await contract.getProductOwner();
+      setProductOwner(ProductOwner);
+      console.log(productOwner)
+    };
+    web3Api.contract && loadProductOwner();
+  }, [web3Api]);
+
+  
+  useEffect(() => {
+    const getAccount = async () => {
+      const accounts = await web3Api.web3.eth.getAccounts()
+      setAccount(accounts[0])
+    }
+    web3Api.web3 && getAccount()
+    },[web3Api.web3])
 
 
   async function submitProduct() {
     try {
+      const startingPriceWei = startingPrice;
       await web3Api.contract.addNewProduct(
         productName,
-        web3Api.web3.utils.toWei(startingPrice, 'ether'),
+        startingPriceWei,
         generalDescription,
-        account
+        account,
+        {from:account,}
       );
     } catch (err) {
       setMsgForBuyer("you already added a product for sale");
@@ -270,7 +298,7 @@ useEffect(() => {
       <br></br>
 
       <br></br>
-      <div>the id you r bidding for is {productID}</div>
+      <div>the id you r bidding for is {lowestProductID}</div>
       <div>the product owner  is {productOwner}</div>
       <div>its starting price is {minAmount} ethr</div>
       <br></br>
