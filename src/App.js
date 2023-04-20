@@ -135,7 +135,7 @@ const withDraw = async () => {
 }
 
 const submitBed = async () => {
-  // console.log(deposit)
+  console.log(deposit)
   console.log(balance)
   if (Number(deposit)< 4){
     setMsgForBuyer("The bid must be higher than 4 etr and should be higher than the current bid ")
@@ -231,10 +231,10 @@ useEffect(() => {
 
   async function submitProduct() {
     try {
-      const startingPriceWei = startingPrice;
+      const startingPriceEthr = startingPrice;
       await web3Api.contract.addNewProduct(
         productName,
-        startingPriceWei,
+        startingPriceEthr,
         generalDescription,
         account,
         {from:account,}
@@ -250,30 +250,33 @@ useEffect(() => {
     setGeneralDescription('');
     setMsgForBuyer('Product added successfully!');
   }
-  
-  // const submitProduct = async () => {
-  //   await addProduct();
-  // };
-
-
-
-  // const addProduct = async () => {
-  //   const { contract, web3 } = web3Api;
-  //   const startingPriceWei = startingPrice;
-  //   await contract.addNewProduct(productName, startingPriceWei, generalDescription, account, {
-  //     from: account,
-  //   });
-  // };
 
   const payFee = async () => {
-    const {contract,web3} = web3Api
-    await contract.payForUpload({
-      from:account,
-      value:web3.utils.toWei("1","ether")
-    })
-    setMsgForFee("The Fee has been payed")
-    document.getElementById("myBtn").disabled = true;
-  };
+    const {contract, web3} = web3Api;
+    try {
+        await contract.payForUpload({
+            from: account,
+            value: web3.utils.toWei("1", "ether")
+        });
+        setMsgForFee("The Fee has been paid");
+        document.getElementById("myBtn").disabled = true;
+    } catch (error) {
+        console.log(error);
+        setMsgForFee("You already paid");
+    }
+};
+
+  // const payFee = async () => {
+  //   const {contract,web3} = web3Api
+  //   await contract.payForUpload({
+  //     from:account,
+  //     value:web3.utils.toWei("1","ether")
+  //   })
+  //   setMsgForFee("The Fee has been payed")
+  //   document.getElementById("myBtn").disabled = true;
+  // };
+  
+
   
   useEffect(() => {
     const getProducts = async () => {
@@ -298,7 +301,7 @@ useEffect(() => {
       <br></br>
 
       <br></br>
-      <div>the id you r bidding for is {lowestProductID}</div>
+      {/* <div>the id you r bidding for is {lowestProductID}</div> */}
       <div>the product owner  is {productOwner}</div>
       <div>its starting price is {minAmount} ethr</div>
       <br></br>

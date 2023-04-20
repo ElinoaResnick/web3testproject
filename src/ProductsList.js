@@ -1,8 +1,35 @@
 
 import React, { useState } from 'react';
+import { useEffect } from 'react';
+
+
 
 function ProductList({ products, onSelectProduct }) {
   const [selectedProductId, setSelectedProductId] = useState('');
+  const [lowestProductID, setLowestProductID] = useState(null)
+
+  function findLowestProductId(products) {
+    if (!products || products.length === 0) {
+      return ("no product"); // or some other default value
+    }
+  
+    let lowestId = products[0].id;
+  
+    for (let i = 1; i < products.length; i++) {
+      if (products[i].id < lowestId) {
+        lowestId = products[i].id;
+      }
+    }
+  
+    return lowestId;
+  }
+  
+  
+  // Find the lowest product ID
+  useEffect(() => {
+    setLowestProductID(findLowestProductId(products));
+  }, [products]);
+  
 
   if (!products) {
     return <div>No products available.</div>;
@@ -17,8 +44,10 @@ function ProductList({ products, onSelectProduct }) {
     onSelectProduct(product);
   };
 
+
   return (
     <>
+    <div>the id for bid {lowestProductID}</div>
       <select value={selectedProductId} onChange={handleProductSelect}>
         <option value="">All products</option>
         {products.map((product) => (
@@ -32,7 +61,7 @@ function ProductList({ products, onSelectProduct }) {
           <tr>
             <th>ID</th>
             <th>Name</th>
-            <th>Starting Price (Wei)</th>
+            <th>Starting Price (Ethr)</th>
             <th>Description</th>
             {/* <th>Select</th> */}
             <th>Product owner</th>
@@ -47,7 +76,7 @@ function ProductList({ products, onSelectProduct }) {
                 <tr key={product.id}>
                   <td>{product.id}</td>
                   <td>{product.name}</td>
-                  <td>{product.startingPriceWei}</td>
+                  <td>{product.startingPriceEthr}</td>
                   <td>{product.generalDescription}</td>
                   <td>{product.funder}</td>
                   {/* <td>
@@ -60,7 +89,7 @@ function ProductList({ products, onSelectProduct }) {
               <tr key={product.id}>
                 <td>{product.id}</td>
                 <td>{product.name}</td>
-                <td>{product.startingPriceWei}</td>
+                <td>{product.startingPriceEthr}</td>
                 <td>{product.generalDescription}</td>
                 <td>{product.funder}</td>
                 <td>{product.isSold}</td>
