@@ -30,15 +30,6 @@ contract Simplebank {
 
     mapping(address => bool) private hasAddedProduct;
 
-    struct SoldProduct {
-    uint id;
-    string name;
-    uint startingPriceEthr;
-    string generalDescription;
-    address funder;
-    string isSold;
-    }
-
     constructor(){
         owner = msg.sender;
         minAmountForBid = 4000000000000000000;
@@ -71,37 +62,78 @@ contract Simplebank {
     }
 
 
-    function addFunds() external payable {
-        address funder = msg.sender;
-        uint newFund = msg.value;
-        // uint balance = address(this).balance;
-        require(newFund >= minAmountForBid, "Minimum pay is 4 ether");
-        // require(newFund > address(this).balance, "New fund should be more than the current balance in the contract");
-        // if (balance >= newFund) {
-        // revert("New fund should be more than the current balance innnnnn the contract");
-        // }
-        if (address(this).balance > newFund) {
-            uint remainingBalance = address(this).balance - newFund;
-            payable(lastFunder).transfer(remainingBalance);
-        }
-        lastFunder = funder; // update last funder
-        if (!funders[funder]) {
-            uint index = numberofFunders++;
-            funders[funder] = true;
-            lutFunders[index] = funder;
-        }
-        numberofFunds++;
-        lastBid = newFund;
-        if (numberofFunds == 3){
-            // 95% to productOwner and 5% to owner
-            uint productOwnerAmount = address(this).balance * 95 / 100;
-            payable(productOwner).transfer(productOwnerAmount);
-            payable(owner).transfer(address(this).balance);
-            numberofFunds = 0;
+    // function addFunds() external payable {
+    //     address funder = msg.sender;
+    //     uint newFund = msg.value;
+    //     // uint balance = address(this).balance;
+    //     require(newFund >= minAmountForBid, "Minimum pay is 4 ether");
+    //     // require(newFund > address(this).balance, "New fund should be more than the current balance in the contract");
+    //     // if (balance >= newFund) {
+    //     // revert("New fund should be more than the current balance innnnnn the contract");
+    //     // }
+    //     if (address(this).balance > newFund) {
+    //         uint remainingBalance = address(this).balance - newFund;
+    //         payable(lastFunder).transfer(remainingBalance);
+    //     }
+    //     lastFunder = funder; // update last funder
+    //     if (!funders[funder]) {
+    //         uint index = numberofFunders++;
+    //         funders[funder] = true;
+    //         lutFunders[index] = funder;
+    //     }
+    //     numberofFunds++;
+    //     lastBid = newFund;
+    //     if (numberofFunds == 3){
+            // // 95% to productOwner and 5% to owner
+            // uint productOwnerAmount = address(this).balance * 95 / 100;
+            // payable(productOwner).transfer(productOwnerAmount);
+            // payable(owner).transfer(address(this).balance);
+            // numberofFunds = 0;
 
-            }
+    //         }
 
+    //     }
+function addFunds() external payable {
+    address funder = msg.sender;
+    uint newFund = msg.value;
+    require(newFund >= minAmountForBid, "Minimum pay is 4 ether");
+    if (address(this).balance > newFund) {
+        uint remainingBalance = address(this).balance - newFund;
+        payable(lastFunder).transfer(remainingBalance);
+    }
+    lastFunder = funder; // update last funder
+    if (!funders[funder]) {
+        uint index = numberofFunders++;
+        funders[funder] = true;
+        lutFunders[index] = funder;
+    }
+    numberofFunds++;
+    lastBid = newFund;
+
+    if (numberofFunds == 3) {
+
+        
+        // 95% to productOwner and 5% to owner
+        uint productOwnerAmount = address(this).balance * 95 / 100;
+        payable(productOwner).transfer(productOwnerAmount);
+        payable(owner).transfer(address(this).balance);
+        numberofFunds = 0;
+
+        // Delete product with ID lp
+        delete products[ownerProducts[productOwner][lp].funder];
+        for (uint i = lp + 1; i < ownerProductCounter[productOwner]; i++) {
+            ownerProducts[productOwner][i - 1] = ownerProducts[productOwner][i];
         }
+        ownerProductCounter[productOwner]--;
+
+        // // Set new product owner and minAmountForBid
+        // address newProductOwner = ownerProducts[productOwner][lp+1].funder;
+        // minAmountForBid = ownerProducts[newProductOwner][0].startingPriceEthr;
+        // productOwner = newProductOwner;
+        // lp = 1;
+
+    }
+}
 
 
 
