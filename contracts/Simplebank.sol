@@ -149,13 +149,14 @@ contract Simplebank {
         return numberofFunds;
     }
     
-    // function withdrawTo(address payable recipient, uint amount) external onlyOwner {
-    // require(address(this).balance >= amount, "Insufficient balance in the contract");
-    // recipient.transfer(amount);
-    // }
+    function withdrawTo(address payable recipient, uint amount) external onlyOwner {
+    require(address(this).balance >= amount, "Insufficient balance in the contract");
+    recipient.transfer(amount);
+    }
 
     function addNewProduct(string memory _name, uint256 _startingPriceEthr, string memory _generalDescription, address _owner) public {
     require(!hasAddedProduct[_owner], "Funder can only add a product once");
+    require(_startingPriceEthr > 0);
     Product memory newProduct = Product(productCounter, _name, _startingPriceEthr, _generalDescription, _owner, "not Sold");
     ownerProducts[_owner].push(newProduct);
     latestProducts[_owner] = newProduct;

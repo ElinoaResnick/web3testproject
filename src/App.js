@@ -265,10 +265,6 @@ useEffect(() => {
   }, [web3Api]);
 
 
-
-  
-
-
   return (
     <div className="App">
       {/* <div> Current Balance is {balance} Ether </div> */}
@@ -287,8 +283,8 @@ useEffect(() => {
       <br></br>
       <div>{msgForBuyer} </div>
       <div>
-        {/* <input onChange={handelWithdrawAmount} /> */}
-        {/* <button onClick={withDraw}> Withdraw funds </button> */}
+        <input onChange={handelWithdrawAmount} />
+        <button onClick={withDraw}> Withdraw funds </button>
       </div>
       <br></br>
       <br></br>

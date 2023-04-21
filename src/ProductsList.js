@@ -19,8 +19,9 @@ function ProductList({ products, onSelectProduct, setMinAmount  }) {
 
   useEffect(() => {
     if (!products || products.length === 0) {
-      setProductOwner("no products");
-      setMinAmountForBid("no products");
+      setProductOwner("no products available");
+      setMinAmountForBid(0);
+      setLowestProductID("no products available");
       return;
     }
 
@@ -72,7 +73,7 @@ function ProductList({ products, onSelectProduct, setMinAmount  }) {
     <>
       <div>The ID of the product for sale is: {lowestProductID}</div>
       <div>The product owner is: {productOwner}</div>
-      <div>the minimum bid amount {minAmountForBid}</div>
+      <div>the minimum bid amount is {minAmountForBid} ether</div>
       <br></br>
       <select value={selectedProductId} onChange={handleProductSelect}>
         <option value="">All products</option>
