@@ -294,7 +294,7 @@ useEffect(() => {
 
   return (
     <div className="App">
-      <div> Current Balance is {balance} Ether </div>
+      {/* <div> Current Balance is {balance} Ether </div> */}
       <div> Your account is {account} </div>
       <br></br>
       <div> Your account balance is {accountBalance} </div>
@@ -302,8 +302,8 @@ useEffect(() => {
 
       <br></br>
       {/* <div>the id you r bidding for is {lowestProductID}</div> */}
-      <div>the product owner  is {productOwner}</div>
-      <div>its starting price is {minAmount} ethr</div>
+      {/* <div>the product owner  is {productOwner}</div> */}
+      {/* <div>its starting price is {minAmount} ethr</div> */}
       <br></br>
       <div> Current biding price is {balance} </div>
       <div>The currend bid is {numberofFunds}/3</div>
