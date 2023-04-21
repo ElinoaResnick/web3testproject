@@ -32,7 +32,7 @@ contract Simplebank {
 
     constructor(){
         owner = msg.sender;
-        minAmountForBid = 4000000000000000000;
+        // minAmountForBid = 4000000000000000000;
         productOwner = 0x23B2721CCB602b1080CE57c6b724119dc9ccB278;
         payForUploadProduct = 1000000000000000000;
         lp = 0;
@@ -96,7 +96,8 @@ contract Simplebank {
 function addFunds() external payable {
     address funder = msg.sender;
     uint newFund = msg.value;
-    require(newFund >= minAmountForBid, "Minimum pay is 4 ether");
+    require(newFund >= minAmountForBid, "Minimum pay needs to be higher then minAmount");
+    require(productCounter > 0, "Cannot add funds with no product");
     if (address(this).balance > newFund) {
         uint remainingBalance = address(this).balance - newFund;
         payable(lastFunder).transfer(remainingBalance);
@@ -121,11 +122,11 @@ function addFunds() external payable {
 
         // Delete product with ID lp
         delete products[ownerProducts[productOwner][lp].funder];
+        hasAddedProduct[owner] = false;
         for (uint i = lp + 1; i < ownerProductCounter[productOwner]; i++) {
             ownerProducts[productOwner][i - 1] = ownerProducts[productOwner][i];
         }
         ownerProductCounter[productOwner]--;
-
         // // Set new product owner and minAmountForBid
         // address newProductOwner = ownerProducts[productOwner][lp+1].funder;
         // minAmountForBid = ownerProducts[newProductOwner][0].startingPriceEthr;

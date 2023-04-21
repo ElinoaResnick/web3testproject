@@ -24,6 +24,7 @@ function App() {
   const [startingPrice, setStartingPrice] = useState('')
   const [generalDescription, setGeneralDescription] = useState('')
   const [msgForBuyer, setMsgForBuyer] = useState(null)
+  const [msgForUploader, setMsgForUploader] = useState(null)
   const [msgForFee, setMsgForFee] = useState(null)
   const [lastFunder, setLastFunder] = useState(null)
   const [productOwner, setProductOwner] = useState(null)
@@ -31,9 +32,12 @@ function App() {
   const [lowestProductID, setLowestProductID] = useState(null)
   const [numberofFunds, setNumberofFunds] = useState(null)
   const [products, setProducts] = useState([]);
-
+  const [minAmountForBid, setMinAmountForBid] = useState(null)
   
-
+  const handleMinAmountChange = (minAmount) => {
+    setMinAmount(minAmount);
+  };
+  
 
 
 function handelDeposit(e){
@@ -137,8 +141,12 @@ const withDraw = async () => {
 const submitBed = async () => {
   console.log(deposit)
   console.log(balance)
-  if (Number(deposit)< 4){
-    setMsgForBuyer("The bid must be higher than 4 etr and should be higher than the current bid ")
+  if (!products || products.length === 0) {
+    console.log('No products available');
+    return;
+  }
+  if (Number(deposit)< minAmount){
+    setMsgForBuyer("The bid must be higher than the min amount for bid and should be higher than the current bid ")
   }
   else if(Number(deposit) > Number(balance)){
     const {contract,web3} = web3Api
@@ -156,15 +164,18 @@ const submitBed = async () => {
 }
 
 
-useEffect(() => {
-  const loadMinAmount = async () => {
-    const { contract,web3 } = web3Api;
-    const minAmount = await contract.getMinAmount();
-    setMinAmount(web3.utils.fromWei(minAmount, "ether"));
-    console.log(minAmount)
-  };
-  web3Api.contract && loadMinAmount();
-}, [web3Api]);
+
+
+
+// useEffect(() => {
+//   const loadMinAmount = async () => {
+//     const { contract,web3 } = web3Api;
+//     const minAmount = await contract.getMinAmount();
+//     setMinAmount(web3.utils.fromWei(minAmount, "ether"));
+//     console.log(minAmount)
+//   };
+//   web3Api.contract && loadMinAmount();
+// }, [web3Api]);
 
 
 
@@ -240,7 +251,7 @@ useEffect(() => {
         {from:account,}
       );
     } catch (err) {
-      setMsgForBuyer("you already added a product for sale");
+      setMsgForUploader("you already added a product for sale");
       return;
     }
   
@@ -248,7 +259,7 @@ useEffect(() => {
     setProductName('');
     setStartingPrice('');
     setGeneralDescription('');
-    setMsgForBuyer('Product added successfully!');
+    setMsgForUploader('Product added successfully!');
   }
 
   const payFee = async () => {
@@ -266,16 +277,6 @@ useEffect(() => {
     }
 };
 
-  // const payFee = async () => {
-  //   const {contract,web3} = web3Api
-  //   await contract.payForUpload({
-  //     from:account,
-  //     value:web3.utils.toWei("1","ether")
-  //   })
-  //   setMsgForFee("The Fee has been payed")
-  //   document.getElementById("myBtn").disabled = true;
-  // };
-  
 
   
   useEffect(() => {
@@ -310,11 +311,10 @@ useEffect(() => {
       <br></br>
       <div>
         <input onChange={handelDeposit} />
-        <button onClick={submitBed}> submitBed </button>
+        <button onClick={submitBed} disabled={!products || products.length === 0}> submitBed </button>
       </div>
       <br></br>
       <div>{msgForBuyer} </div>
-      <div>the last funder is {lastFunder} </div>
       <br></br>
       <br></br>
       <br></br>
@@ -322,6 +322,12 @@ useEffect(() => {
         <input onChange={handelWithdrawAmount} />
         <button onClick={withDraw}> Withdraw funds </button>
       </div>
+      <br></br>
+      <br></br>
+      <ProductsList products={products} onSelectProduct={handleSelectButton} setMinAmount={handleMinAmountChange}/> 
+      <br></br>
+      <div>the last funder is {lastFunder} </div>
+
       <br></br>
       <div> To upload a new product for auction fill in this fields: 
         <br></br><br></br>
@@ -331,7 +337,7 @@ useEffect(() => {
         General description <textarea value={generalDescription} onChange={handleGeneralDescription}></textarea><br></br>
         <button onClick={submitProduct}> submitProduct </button>
       </div>
-      {/* {msgForBuyer && <p>{msgForBuyer}</p>} */}
+      {msgForUploader && <p>{msgForUploader}</p>}
       <br></br><br></br>
       <div>NOTICE!!</div>
       <div>If you have not yet participated in an auction - you will have to pay a fee of 1 EHTER in order to put a product up for sale </div>
@@ -339,7 +345,7 @@ useEffect(() => {
       <br></br>
       <div >{msgForFee} </div>
       <br></br><br></br>
-      <ProductsList products={products} onSelectProduct={handleSelectButton} /> 
+      {/* <div>min amount {minAmount}</div> */}
     </div>
   );
   }
