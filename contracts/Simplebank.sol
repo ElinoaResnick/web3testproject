@@ -62,97 +62,45 @@ contract Simplebank {
     }
 
 
-    // function addFunds() external payable {
-    //     address funder = msg.sender;
-    //     uint newFund = msg.value;
-    //     // uint balance = address(this).balance;
-    //     require(newFund >= minAmountForBid, "Minimum pay is 4 ether");
-    //     // require(newFund > address(this).balance, "New fund should be more than the current balance in the contract");
-    //     // if (balance >= newFund) {
-    //     // revert("New fund should be more than the current balance innnnnn the contract");
-    //     // }
-    //     if (address(this).balance > newFund) {
-    //         uint remainingBalance = address(this).balance - newFund;
-    //         payable(lastFunder).transfer(remainingBalance);
-    //     }
-    //     lastFunder = funder; // update last funder
-    //     if (!funders[funder]) {
-    //         uint index = numberofFunders++;
-    //         funders[funder] = true;
-    //         lutFunders[index] = funder;
-    //     }
-    //     numberofFunds++;
-    //     lastBid = newFund;
-    //     if (numberofFunds == 3){
-            // // 95% to productOwner and 5% to owner
-            // uint productOwnerAmount = address(this).balance * 95 / 100;
-            // payable(productOwner).transfer(productOwnerAmount);
-            // payable(owner).transfer(address(this).balance);
-            // numberofFunds = 0;
-
-    //         }
-
-    //     }
-function addFunds() external payable {
-    address funder = msg.sender;
-    uint newFund = msg.value;
-    require(newFund >= minAmountForBid, "Minimum pay needs to be higher then minAmount");
-    require(productCounter > 0, "Cannot add funds with no product");
-    if (address(this).balance > newFund) {
-        uint remainingBalance = address(this).balance - newFund;
-        payable(lastFunder).transfer(remainingBalance);
-    }
-    lastFunder = funder; // update last funder
-    if (!funders[funder]) {
-        uint index = numberofFunders++;
-        funders[funder] = true;
-        lutFunders[index] = funder;
-    }
-    numberofFunds++;
-    lastBid = newFund;
-
-    if (numberofFunds == 3) {
-
-        
-        // 95% to productOwner and 5% to owner
-        uint productOwnerAmount = address(this).balance * 95 / 100;
-        payable(productOwner).transfer(productOwnerAmount);
-        payable(owner).transfer(address(this).balance);
-        numberofFunds = 0;
-
-        // Delete product with ID lp
-        delete products[ownerProducts[productOwner][lp].funder];
-        hasAddedProduct[owner] = false;
-        for (uint i = lp + 1; i < ownerProductCounter[productOwner]; i++) {
-            ownerProducts[productOwner][i - 1] = ownerProducts[productOwner][i];
+    function addFunds() external payable {
+        address funder = msg.sender;
+        uint newFund = msg.value;
+        require(newFund >= minAmountForBid, "Minimum pay needs to be higher then minAmount");
+        require(productCounter > 0, "Cannot add funds with no product");
+        if (address(this).balance > newFund) {
+            uint remainingBalance = address(this).balance - newFund;
+            payable(lastFunder).transfer(remainingBalance);
         }
-        ownerProductCounter[productOwner]--;
-        // // Set new product owner and minAmountForBid
-        // address newProductOwner = ownerProducts[productOwner][lp+1].funder;
-        // minAmountForBid = ownerProducts[newProductOwner][0].startingPriceEthr;
-        // productOwner = newProductOwner;
-        // lp = 1;
+        lastFunder = funder; // update last funder
+        if (!funders[funder]) {
+            uint index = numberofFunders++;
+            funders[funder] = true;
+            lutFunders[index] = funder;
+        }
+        numberofFunds++;
+        lastBid = newFund;
 
+        if (numberofFunds == 3) {
+
+            
+            // 95% to productOwner and 5% to owner
+            uint productOwnerAmount = address(this).balance * 95 / 100;
+            payable(productOwner).transfer(productOwnerAmount);
+            payable(owner).transfer(address(this).balance);
+            numberofFunds = 0;
+
+            // Delete product with ID lp
+            delete products[ownerProducts[productOwner][lp].funder];
+            hasAddedProduct[owner] = false;
+            for (uint i = lp + 1; i < ownerProductCounter[productOwner]; i++) {
+                ownerProducts[productOwner][i - 1] = ownerProducts[productOwner][i];
+            }
+            ownerProductCounter[productOwner]--;
+
+        }
     }
-}
 
 
-
-
-    // function payForUpload() external payable {
-    //     address funder = msg.sender;
-    //     uint newFund = msg.value;
-    //     require(newFund == payForUploadProduct, "pay is 1 ether");
-    //     lastFunder = funder; // update last funder
-    //     if (!funders[funder]) {
-    //         uint index = numberofFunders++;
-    //         funders[funder] = true;
-    //         lutFunders[index] = funder;
-    //     }
-        
-    //     address payable contractOwner = payable(owner);
-    //     contractOwner.transfer(msg.value);
-    //     }
 
     function payForUpload() external payable {
         address funder = msg.sender;
@@ -170,53 +118,40 @@ function addFunds() external payable {
 
 
 
-        function getAllFunders() external view returns(address[] memory) {
-            address[] memory _funders = new address[](numberofFunders);
-            for(uint i=0; i<numberofFunders; i++){
-                _funders[i] = lutFunders[i];
-            }
-            return _funders;
+    function getAllFunders() external view returns(address[] memory) {
+        address[] memory _funders = new address[](numberofFunders);
+        for(uint i=0; i<numberofFunders; i++){
+            _funders[i] = lutFunders[i];
         }
-        function withdraw(uint withdrawAmount) external {
-            require(withdrawAmount < 1000000000000000000 || msg.sender == owner, "You can't wits");
-            payable (msg.sender).transfer(withdrawAmount);
-        }
+        return _funders;
+    }
+    function withdraw(uint withdrawAmount) external {
+        require(withdrawAmount < 1000000000000000000 || msg.sender == owner, "You can't wits");
+        payable (msg.sender).transfer(withdrawAmount);
+    }
 
-        function getLastFunder() external view returns (address) {
-            return lastFunder;
-        }
-        
-        function getProductOwner() external view returns (address) {
-            return productOwner;
-        }
+    function getLastFunder() external view returns (address) {
+        return lastFunder;
+    }
+    
+    function getProductOwner() external view returns (address) {
+        return productOwner;
+    }
 
-        function getMinAmount() external view returns (uint) {
-            return minAmountForBid;
-        }
-        // function getLowestProductIDForSale() external view returns (uint) {
-        //     return lowestProductIDForSale;
-        // }
+    function getMinAmount() external view returns (uint) {
+        return minAmountForBid;
+    }
+    // function getLowestProductIDForSale() external view returns (uint) {
+    //     return lowestProductIDForSale;
+    // }
 
-        function getNumberofFunds() external view returns (uint){
-            return numberofFunds;
-        }
-        
-        function withdrawTo(address payable recipient, uint amount) external onlyOwner {
-        require(address(this).balance >= amount, "Insufficient balance in the contract");
-        recipient.transfer(amount);
-        }
-
-
-    // function addNewProduct(string memory _name, uint _startingPriceEthr, string memory _generalDescription, address _owner) public {
-    // // require(products[msg.sender].id == 0, "Funder cannot add a new product if they already have one");
-    // require(!hasAddedProduct[_owner], "Funder can only add a product once");
-    // Product memory newProduct = Product(productCounter, _name, _startingPriceEthr, _generalDescription, _owner);
-    // ownerProducts[_owner].push(newProduct);
-    // latestProducts[_owner] = newProduct;
-    // ownerProductCounter[_owner]++;
-    // lutFunders[productCounter] = _owner;
-    // productCounter++;
-    // hasAddedProduct[_owner] = true;
+    function getNumberofFunds() external view returns (uint){
+        return numberofFunds;
+    }
+    
+    // function withdrawTo(address payable recipient, uint amount) external onlyOwner {
+    // require(address(this).balance >= amount, "Insufficient balance in the contract");
+    // recipient.transfer(amount);
     // }
 
     function addNewProduct(string memory _name, uint256 _startingPriceEthr, string memory _generalDescription, address _owner) public {
@@ -296,37 +231,3 @@ function addFunds() external payable {
     
 }
 
-
-
-
-
-//const instance = await Simplebank.deployed()
-// const funds = instance.funds()
-// instance.addFunds({value:"4000000000000000000", from: accounts[0]})
-// instance.addFunds({value:"500000000000000000", from: accounts[1]})
-// instance.addFunds({value:"5000000000000000000", from: accounts[1]})
-// instance.getAllFunders()
-// instance.withdraw("1000000000000000000")
-// instance.transferOwnership("0x469bC46515Ffed50e765b87DA3aEab4CAAf4F809")
-
-
-// const recipient = "0x687591815BF3EeacF01FdE0aE993314259D607d9"; // replace with recipient address
-// const amount = web3.utils.toWei("12", "ether"); // replace with amount to withdraw in ether
-// await instance.withdrawTo(recipient, amount, { from: accounts[0] }); // replace with sender account
-
-
-
-// if (numberofFunds == 3) {
-//     // delete product with id 0
-//     delete products[ownerProducts[productOwner][0].funder];
-//     for (uint i = 1; i < ownerProductCounter[productOwner]; i++) {
-//         ownerProducts[productOwner][i - 1] = ownerProducts[productOwner][i];
-//     }
-//     ownerProductCounter[productOwner]--;
-    
-//     // 95% to productOwner and 5% to owner
-//     uint productOwnerAmount = address(this).balance * 95 / 100;
-//     payable(productOwner).transfer(productOwnerAmount);
-//     payable(owner).transfer(address(this).balance);
-//     numberofFunds = 0;
-// }

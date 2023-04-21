@@ -165,21 +165,6 @@ const submitBed = async () => {
 
 
 
-
-
-// useEffect(() => {
-//   const loadMinAmount = async () => {
-//     const { contract,web3 } = web3Api;
-//     const minAmount = await contract.getMinAmount();
-//     setMinAmount(web3.utils.fromWei(minAmount, "ether"));
-//     console.log(minAmount)
-//   };
-//   web3Api.contract && loadMinAmount();
-// }, [web3Api]);
-
-
-
-
 useEffect(() => {
   const loadBalance = async () => {
     const {contract,web3} = web3Api
@@ -199,15 +184,6 @@ useEffect(() => {
   }, [web3Api, account]);
   
 
-  // useEffect(() => {
-  //   const loadLowestProductID = async () => {
-  //     const { contract} = web3Api;
-  //     const lowestProductID = await contract.getLowestProductIDForSale();
-  //     setLowestProductID(lowestProductID);
-  //     console.log(loadLowestProductID)
-  //   };
-  //   web3Api.contract && loadLowestProductID();
-  // }, [web3Api]);
 
   useEffect(() => {
     const loadLowestProductID = async () => {
@@ -300,11 +276,6 @@ useEffect(() => {
       <br></br>
       <div> Your account balance is {accountBalance} </div>
       <br></br>
-
-      <br></br>
-      {/* <div>the id you r bidding for is {lowestProductID}</div> */}
-      {/* <div>the product owner  is {productOwner}</div> */}
-      {/* <div>its starting price is {minAmount} ethr</div> */}
       <br></br>
       <div> Current biding price is {balance} </div>
       <div>The currend bid is {numberofFunds}/3</div>
@@ -315,12 +286,9 @@ useEffect(() => {
       </div>
       <br></br>
       <div>{msgForBuyer} </div>
-      <br></br>
-      <br></br>
-      <br></br>
       <div>
-        <input onChange={handelWithdrawAmount} />
-        <button onClick={withDraw}> Withdraw funds </button>
+        {/* <input onChange={handelWithdrawAmount} /> */}
+        {/* <button onClick={withDraw}> Withdraw funds </button> */}
       </div>
       <br></br>
       <br></br>
