@@ -1,3 +1,4 @@
+import './App.css';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 
@@ -71,11 +72,11 @@ function ProductList({ products, onSelectProduct, setMinAmount  }) {
 
   return (
     <>
-      <div>The ID of the product for sale is: {lowestProductID}</div>
-      <div>The product owner is: {productOwner}</div>
-      <div>the minimum bid amount is {minAmountForBid} ether</div>
+      <div className="descreption1">The ID of the product for sale is: {lowestProductID}</div>
+      <div className="descreption2">The product owner is: {productOwner}</div>
+      <div className="descreption3">the minimum bid amount is {minAmountForBid} ether</div>
       <br></br>
-      <select value={selectedProductId} onChange={handleProductSelect}>
+      <select className='select' value={selectedProductId} onChange={handleProductSelect}>
         <option value="">All products</option>
         {products.map((product) => (
           <option key={product.id} value={product.id}>
@@ -85,6 +86,7 @@ function ProductList({ products, onSelectProduct, setMinAmount  }) {
       </select>
       <br></br>
       <br></br>
+      <div className="products">
       <table>
         <thead>
           <tr>
@@ -122,6 +124,7 @@ function ProductList({ products, onSelectProduct, setMinAmount  }) {
           )}
         </tbody>
       </table>
+      </div>
     </>
   );
 }

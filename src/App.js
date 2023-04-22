@@ -33,7 +33,9 @@ function App() {
   const [numberofFunds, setNumberofFunds] = useState(null)
   const [products, setProducts] = useState([]);
   const [minAmountForBid, setMinAmountForBid] = useState(null)
-  
+  const [className, setClassName] = useState('button');
+  const logo = require("C:/Users/Elinoa Resnick/Desktop/Tech/web3testproject/src/logo.jpeg");
+  // const headImg = require('./auction.jpeg');
   const handleMinAmountChange = (minAmount) => {
     setMinAmount(minAmount);
   };
@@ -266,40 +268,69 @@ useEffect(() => {
 
 
   return (
-    <div className="App">
+    <div className="app">
+        <div className="header">
+        <div className="logo"><img src=".\logo.jpeg" alt="logo" width="350"></img></div>
+        <div className="account">
+          <h3> Account: {account}</h3>
+          <h3> Balance: {accountBalance}</h3>
+        </div>
+      </div>
+      {/* <div className="headImg"><img src=".\auction.jpeg" alt="headImg" width="300"></img></div> */}
       {/* <div> Current Balance is {balance} Ether </div> */}
+      {/* <div className='det'>
       <div> Your account is {account} </div>
       <br></br>
       <div> Your account balance is {accountBalance} </div>
+      </div> */}
       <br></br>
-      <br></br>
+      <div className="auction">
+      <h2>Let`s start auctioning!</h2>
       <div> Current biding price is {balance} </div>
       <div>The currend bid is {numberofFunds}/3</div>
       <br></br>
       <div>
-        <input onChange={handelDeposit} />
-        <button onClick={submitBed} disabled={!products || products.length === 0}> submitBed </button>
+        <input type="text" onChange={handelDeposit} placeholder= "Enter your bid amount" />
+        <button
+          onClick={submitBed}
+          disabled={!products || products.length === 0}
+          className={!products || products.length === 0 ? 'bb' : 'button'}
+        >
+          Submit Bid
+        </button>
+
+        {/* <button  className="button" onClick={submitBed} disabled={!products || products.length === 0}class="disabled" > submitBed </button> */}
       </div>
-      <br></br>
+      {/* <br></br> */}
       <div>{msgForBuyer} </div>
-      <div>
-        <input onChange={handelWithdrawAmount} />
+      {/* <div>
+        <input type="text" onChange={handelWithdrawAmount} />
         <button onClick={withDraw}> Withdraw funds </button>
+      </div> */}
+      <br></br>
       </div>
-      <br></br>
-      <br></br>
       <ProductsList products={products} onSelectProduct={handleSelectButton} setMinAmount={handleMinAmountChange}/> 
       <br></br>
       <div>the last funder is {lastFunder} </div>
 
       <br></br>
+      <div className="upload">
+        <h2>Upload product</h2>
       <div> To upload a new product for auction fill in this fields: 
         <br></br><br></br>
-        
-        Product name <input type="text" value={productName} onChange={handleProductName} /><br></br>
-        Starting price <input type="text" value={startingPrice} onChange={handleStartingPrice} /><br></br>
-        General description <textarea value={generalDescription} onChange={handleGeneralDescription}></textarea><br></br>
+        <div className="upload1">
+        <div className="upload11">Product name</div>
+        <div className="upload12"><input type="text" value={productName} onChange={handleProductName} /></div><br></br>
+        <div className="upload2">
+        <div className="upload21">Starting price</div>
+        <div className="upload22"><input type="text" value={startingPrice} onChange={handleStartingPrice} /></div><br></br>
+        </div>
+        <div className="upload3">
+        <div className="upload31">General description</div>
+        <div className="upload32"><textarea value={generalDescription} onChange={handleGeneralDescription}></textarea></div><br></br>
+        </div>
         <button onClick={submitProduct}> submitProduct </button>
+      </div>
       </div>
       {msgForUploader && <p>{msgForUploader}</p>}
       <br></br><br></br>
@@ -310,6 +341,7 @@ useEffect(() => {
       <div >{msgForFee} </div>
       <br></br><br></br>
       {/* <div>min amount {minAmount}</div> */}
+      </div>
     </div>
   );
   }

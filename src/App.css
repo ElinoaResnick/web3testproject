@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -35,4 +35,128 @@
   to {
     transform: rotate(360deg);
   }
+} */
+
+.app {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  background-color:white;
+  color: #333;
+  text-align: center;
 }
+.header {
+  padding-bottom: 110px;
+  border: 2px solid #F1C40F;
+  /* align-items: left; */
+
+  
+}
+.account {
+  padding-left: 70px;
+  float: left;
+  text-align: left;
+  padding-bottom: 30px;
+}
+.logo {
+  float: left;
+}
+.account, .logo{
+  display: inline-block;
+}
+.auction {
+  padding: 10px;
+}
+.descreption1, .descreption2, .descreption3, .descreption4 {
+  display: inline-block;
+  border: 2px solid #F1C40F;
+  border-radius: 7px;
+  padding: 20px;
+  margin: 10px;
+  font-size: 20px;
+} 
+input[type="text"] {
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 7px;
+  font-size: 18px;
+  margin: 10px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+textarea {
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 7px;
+  font-size: 18px;
+  margin: 10px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+button {
+  color: #fff;
+  background-color: #76D7C4;
+  border: 1px solid #ccc;
+  padding: 7px 20px;
+  font-size: 18px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  margin: 20px;
+}
+
+.bb {
+  background-color: gray;
+  cursor: not-allowed;
+  }
+
+.upload {
+  background-color: #0E6655;
+  padding: 10px;
+  color: white;
+  margin-top: 10px;
+}
+.upload12, .upload22, .upload32 {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+.products {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+table {
+  border-collapse: collapse;
+  border: 1px solid #F1C40F;
+}
+th {
+  background-color: #F1C40F;
+}
+td, th {
+  padding: 8px;
+  text-align: left;
+}
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+.det {
+  background-color: #2f9e87;
+  padding: 10px;
+  color: white;
+  margin-top: 10px;
+}
+
+.select {
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  padding: 7px;
+  font-size: 18px;
+  margin: 10px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+select option:hover {
+  background-color: yellow;
+}
+
+
