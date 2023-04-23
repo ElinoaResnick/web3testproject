@@ -99,18 +99,18 @@ function ProductList({ products, onSelectProduct, setMinAmount  }) {
         </thead>
         <tbody>
           {
-          // selectedProductId ? (
-          //   products
-          //     .filter((product) => product.id === selectedProductId)
-          //     .map((product) => (
-          //       <tr key={product.id}>
-          //         <td>{product.id}</td>
-          //         <td>{product.name}</td>
-          //         <td>{product.startingPriceEthr}</td>
-          //         <td>{product.generalDescription}</td>
-          //       </tr>
-          //     ))
-          // ) : 
+          selectedProductId ? (
+            products
+              .filter((product) => product.id === selectedProductId)
+              .map((product) => (
+                <tr key={product.id}>
+                  <td>{product.id}</td>
+                  <td>{product.name}</td>
+                  <td>{product.startingPriceEthr}</td>
+                  <td>{product.generalDescription}</td>
+                </tr>
+              ))
+          ) : 
           (
             products.map((product) => (
               <tr key={product.id}>

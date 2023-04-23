@@ -125,10 +125,10 @@ contract Simplebank {
         }
         return _funders;
     }
-    function withdraw(uint withdrawAmount) external {
-        require(withdrawAmount < 1000000000000000000 || msg.sender == owner, "You can't wits");
-        payable (msg.sender).transfer(withdrawAmount);
-    }
+    // function withdraw(uint withdrawAmount) external {
+    //     require(withdrawAmount < 1000000000000000000 || msg.sender == owner, "You can't wits");
+    //     payable (msg.sender).transfer(withdrawAmount);
+    // }
 
     function getLastFunder() external view returns (address) {
         return lastFunder;

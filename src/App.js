@@ -34,7 +34,7 @@ function App() {
   const [products, setProducts] = useState([]);
   const [minAmountForBid, setMinAmountForBid] = useState(null)
   const [className, setClassName] = useState('button');
-  const logo = require("C:/Users/Elinoa Resnick/Desktop/Tech/web3testproject/src/logo.jpeg");
+  // const logo = require("C:/Users/Elinoa Resnick/Desktop/Tech/web3testproject/src/logo.jpeg");
   // const headImg = require('./auction.jpeg');
   const handleMinAmountChange = (minAmount) => {
     setMinAmount(minAmount);
@@ -276,7 +276,7 @@ useEffect(() => {
           <h3> Balance: {accountBalance}</h3>
         </div>
       </div>
-      {/* <div className="headImg"><img src=".\auction.jpeg" alt="headImg" width="300"></img></div> */}
+      {/* <div className="headImg"><img src={headImg} alt="headImg" width="300"></img></div> */}
       {/* <div> Current Balance is {balance} Ether </div> */}
       {/* <div className='det'>
       <div> Your account is {account} </div>
@@ -303,10 +303,10 @@ useEffect(() => {
       </div>
       {/* <br></br> */}
       <div>{msgForBuyer} </div>
-      {/* <div>
-        <input type="text" onChange={handelWithdrawAmount} />
-        <button onClick={withDraw}> Withdraw funds </button>
-      </div> */}
+        {/* <div>
+          <input type="text" onChange={handelWithdrawAmount} />
+          <button onClick={withDraw}> Withdraw funds </button>
+        </div> */}
       <br></br>
       </div>
       <ProductsList products={products} onSelectProduct={handleSelectButton} setMinAmount={handleMinAmountChange}/> 
